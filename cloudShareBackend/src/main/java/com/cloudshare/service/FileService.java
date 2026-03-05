@@ -46,6 +46,12 @@ public class FileService {
       throw new RuntimeException("Storage limit reached. Please upgrade your plan.");
     }
 
+    // Check for duplicate file name in the same user's folder
+    boolean exists = fileRepository.existsByUserIdAndFileName(userId, file.getOriginalFilename());
+    if (exists) {
+      throw new RuntimeException("A file with the same name already exists in your folder.");
+    }
+
     // Store file on disk
     String storagePath = fileStorageService.store(file, userId);
     log.info("File stored at: {}", storagePath);

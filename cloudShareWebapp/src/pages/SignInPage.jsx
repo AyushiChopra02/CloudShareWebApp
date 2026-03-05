@@ -147,7 +147,7 @@ const SignInPage = () => {
   // ─── Mode: Choose method ─────────────────────────────────
   if (mode === "choose") {
     return (
-      <CardWrapper title="Welcome Back" subtitle="Choose how you'd like to sign in">
+      <CardWrapper title="Welcome" subtitle="Choose how you'd like to sign in">
         {error && (
           <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm text-center">
             {error}
@@ -202,7 +202,8 @@ const SignInPage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
             <div className="relative">
               <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
+                <input
+                  autoComplete="username"
                 type="email"
                 required
                 value={email}
@@ -217,7 +218,8 @@ const SignInPage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
             <div className="relative">
               <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
+                <input
+                  autoComplete="current-password"
                 type="password"
                 required
                 value={password}

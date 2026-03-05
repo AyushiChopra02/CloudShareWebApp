@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface FileRepository extends JpaRepository<FileEntity, String> {
+  boolean existsByUserIdAndFileName(String userId, String fileName);
 
   List<FileEntity> findByUserIdOrderByUploadedAtDesc(String userId);
 

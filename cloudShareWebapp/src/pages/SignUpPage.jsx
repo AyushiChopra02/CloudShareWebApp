@@ -9,7 +9,6 @@ const CardWrapper = ({ children, title, subtitle }) => (
     <div className="absolute bottom-[-10%] right-[-5%] w-80 h-80 rounded-full bg-indigo-200/40 blur-3xl" />
 
     <div className="relative w-full max-w-md">
-  
       <div className="flex items-center justify-center gap-2.5 mb-8">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-200">
           <Cloud className="w-5 h-5 text-white" />
@@ -18,15 +17,11 @@ const CardWrapper = ({ children, title, subtitle }) => (
           CloudShare
         </span>
       </div>
-
-  
       <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl shadow-purple-100/50 border border-gray-200/60 p-8">
         <h2 className="text-2xl font-bold text-gray-900 text-center">{title}</h2>
         <p className="text-sm text-gray-500 text-center mt-1.5 mb-6">{subtitle}</p>
         {children}
       </div>
-
-    
       <p className="text-center text-sm text-gray-500 mt-6">
         Already have an account?{" "}
         <Link to="/sign-in" className="text-purple-600 font-semibold hover:text-purple-700 transition-colors">

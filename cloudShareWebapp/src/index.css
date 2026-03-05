@@ -1,3 +1,28 @@
+/* ─── Dark mode overrides ─────────────────────────────── */
+html.dark {
+  background-color: #18181b;
+}
+body.dark {
+  background-color: #18181b;
+  color: #e5e7eb;
+}
+
+.dark .bg-white\/80,
+.dark .bg-white\/70,
+.dark .bg-white,
+.dark .bg-gray-50\/50,
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: #232336 !important;
+}
+.dark .text-gray-900,
+.dark .text-gray-800 {
+  color: #e5e7eb !important;
+}
+.dark .text-gray-500,
+.dark .text-gray-400 {
+  color: #a1a1aa !important;
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 

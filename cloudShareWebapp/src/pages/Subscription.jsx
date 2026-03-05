@@ -13,6 +13,15 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 
+// Helper to format bytes as MB/GB
+function formatStorage(bytes) {
+  if (bytes == null || isNaN(bytes)) return "0 MB";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
+  if (bytes < 1024 * 1024 * 1024)
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+  return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+}
+
 const plans = [
   {
     id: "free",
@@ -33,7 +42,7 @@ const plans = [
   {
     id: "premium",
     name: "Premium",
-    price: 49900, // in paise for Razorpay
+    price: 49900,
     displayPrice: "499",
     period: "/month",
     icon: Crown,
@@ -52,11 +61,17 @@ const plans = [
   },
 ];
 
-const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_yourkeyhere";
+const RAZORPAY_KEY =
+  import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_yourkeyhere";
 
 const Subscription = () => {
-  const { subscription, fetchSubscription, upgradeSubscription, addTransaction, loading } =
-    useAppContext();
+  const {
+    subscription,
+    fetchSubscription,
+    upgradeSubscription,
+    addTransaction,
+  } = useAppContext();
+
   const { user } = useUser();
   const [processing, setProcessing] = useState(false);
 
@@ -69,9 +84,8 @@ const Subscription = () => {
   const handlePayment = (plan) => {
     if (plan.id === "free") return;
 
-    // Check if Razorpay script is loaded
     if (!window.Razorpay) {
-      toast.error("Payment gateway is loading. Please try again in a moment.");
+      toast.error("Payment gateway loading. Try again.");
       return;
     }
 
@@ -79,26 +93,23 @@ const Subscription = () => {
 
     const options = {
       key: RAZORPAY_KEY,
-      amount: plan.price, // in paise
+      amount: plan.price,
       currency: "INR",
       name: "CloudShare",
-      description: `${plan.name} Plan - Monthly Subscription`,
-      image: "",
+      description: `${plan.name} Plan`,
       handler: function (response) {
-        // Payment successful
         const txn = {
           id: response.razorpay_payment_id || "txn-" + Date.now(),
           type: `${plan.name} Subscription`,
           amount: plan.price / 100,
           date: new Date().toISOString(),
           status: "completed",
-          paymentId: response.razorpay_payment_id,
         };
 
         addTransaction(txn);
         upgradeSubscription(plan);
         setProcessing(false);
-        toast.success("Payment successful! Plan upgraded.");
+        toast.success("Payment successful!");
       },
       prefill: {
         name: user?.fullName || "",
@@ -110,85 +121,51 @@ const Subscription = () => {
       modal: {
         ondismiss: function () {
           setProcessing(false);
-          toast.info("Payment cancelled.");
         },
       },
     };
 
     const rzp = new window.Razorpay(options);
-    rzp.on("payment.failed", function (response) {
-      setProcessing(false);
-      const txn = {
-        id: "txn-" + Date.now(),
-        type: `${plan.name} Subscription (Failed)`,
-        amount: plan.price / 100,
-        date: new Date().toISOString(),
-        status: "failed",
-        error: response.error?.description,
-      };
-      addTransaction(txn);
-      toast.error("Payment failed: " + (response.error?.description || "Unknown error"));
-    });
     rzp.open();
   };
 
   return (
     <div className="max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900">Subscription</h1>
-        <p className="text-sm text-gray-500 mt-1.5">Manage your plan and storage.</p>
-      </div>
 
       {/* Current Usage */}
       {subscription && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-8 shadow-sm hover:shadow-lg transition-shadow duration-300">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-gray-900">Current Usage</h2>
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${currentPlan === "Premium" ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-200/50" : "bg-gray-100 text-gray-600"}`}>
-              <Crown size={12} />
-              {currentPlan} Plan
-            </span>
-          </div>
+        <div className="bg-white rounded-2xl border p-6 mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            {/* Uploads */}
             <div className="p-4 rounded-xl bg-purple-50">
               <div className="flex items-center gap-2 mb-2">
-                <Upload size={16} className="text-purple-600" />
-                <span className="text-sm font-medium text-purple-700">Uploads</span>
+                <Upload size={16} />
+                <span>Uploads</span>
               </div>
-              <p className="text-2xl font-bold text-purple-900">
-                {subscription.uploadsUsed}{" "}
-                <span className="text-sm font-normal text-purple-600">
-                  / {subscription.uploadsLimit}
-                </span>
+
+              <p className="text-2xl font-bold">
+                {subscription.uploadsUsed} /
+                {subscription.uploadsLimit}
               </p>
-              <div className="mt-2 w-full bg-purple-200 rounded-full h-2">
-                <div
-                  className="bg-purple-600 h-2 rounded-full transition-all"
-                  style={{
-                    width: `${Math.min(
-                      (subscription.uploadsUsed / subscription.uploadsLimit) * 100,
-                      100
-                    )}%`,
-                  }}
-                />
-              </div>
             </div>
+
+            {/* Storage */}
             <div className="p-4 rounded-xl bg-blue-50">
               <div className="flex items-center gap-2 mb-2">
-                <HardDrive size={16} className="text-blue-600" />
-                <span className="text-sm font-medium text-blue-700">Storage</span>
+                <HardDrive size={16} />
+                <span>Storage</span>
               </div>
-              <p className="text-2xl font-bold text-blue-900">
-                {subscription.storageUsed}{" "}
-                <span className="text-sm font-normal text-blue-600">
-                  / {subscription.storageLimit}
+
+              <p className="text-2xl font-bold">
+                {formatStorage(subscription.storageUsedBytes)}
+                <span className="text-sm ml-2">
+                  / {formatStorage(subscription.storageLimitBytes)}
                 </span>
               </p>
-              <div className="mt-2 w-full bg-blue-200 rounded-full h-2">
-                <div className="bg-blue-600 h-2 rounded-full w-1/5 transition-all" />
-              </div>
+
             </div>
+
           </div>
         </div>
       )}
@@ -198,71 +175,35 @@ const Subscription = () => {
         {plans.map((plan) => (
           <div
             key={plan.id}
-            className={`bg-white rounded-2xl border-2 p-6 relative ${plan.color} transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
+            className="bg-white rounded-2xl border p-6"
           >
-            {plan.highlighted && (
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold rounded-full shadow-lg shadow-purple-200/50">
-                Recommended
-              </span>
-            )}
-            <div className="flex items-center gap-3 mb-4">
-              <div
-                className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                  plan.highlighted ? "bg-purple-100 text-purple-600" : "bg-gray-100 text-gray-600"
-                }`}
-              >
-                <plan.icon size={20} />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
-              </div>
+            <h3 className="text-lg font-bold">{plan.name}</h3>
+
+            <div className="mb-4">
+              ₹{plan.displayPrice || plan.price}
+              <span className="text-sm ml-1">{plan.period}</span>
             </div>
-            <div className="mb-6">
-              <span className="text-3xl font-extrabold text-gray-900">
-                ₹{plan.displayPrice || plan.price}
-              </span>
-              <span className="text-sm text-gray-500 ml-1">{plan.period}</span>
-            </div>
-            <ul className="space-y-3 mb-6">
+
+            <ul className="mb-4">
               {plan.features.map((feature) => (
-                <li key={feature} className="flex items-center gap-2 text-sm text-gray-700">
-                  <Check size={16} className="text-green-500 shrink-0" />
+                <li key={feature} className="flex items-center gap-2">
+                  <Check size={14} />
                   {feature}
                 </li>
               ))}
             </ul>
+
             <button
               onClick={() => handlePayment(plan)}
               disabled={currentPlan.toLowerCase() === plan.id || processing}
-              className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 ${plan.highlighted && currentPlan.toLowerCase() !== plan.id ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:shadow-xl hover:shadow-purple-200/50 hover:-translate-y-0.5" : plan.buttonClass}`}
+              className="w-full py-3 bg-purple-600 text-white rounded-lg"
             >
-              {processing && plan.highlighted ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  Processing...
-                </>
-              ) : currentPlan.toLowerCase() === plan.id ? (
-                <>
-                  <ShieldCheck size={16} />
-                  Current Plan
-                </>
-              ) : (
-                plan.buttonText
-              )}
+              {processing ? "Processing..." : plan.buttonText}
             </button>
           </div>
         ))}
       </div>
 
-      {/* Payment security note */}
-      <div className="mt-10 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-100">
-          <ShieldCheck size={14} className="text-green-500" />
-          <p className="text-xs text-gray-400 font-medium">
-            Payments are securely processed via Razorpay. We never store your card details.
-          </p>
-        </div>
-      </div>
     </div>
   );
 };

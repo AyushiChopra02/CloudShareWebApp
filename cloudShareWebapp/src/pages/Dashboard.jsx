@@ -103,7 +103,7 @@ const Dashboard = () => {
       {/* Welcome */}
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold text-gray-900">
-          Welcome back, {user?.firstName || "User"}{" "}
+          Welcome, {user?.firstName || "User"}{" "}
           <span className="inline-block animate-float">👋</span>
         </h1>
         <p className="text-sm text-gray-500 mt-1.5">

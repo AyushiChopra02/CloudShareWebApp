@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { UserButton, useUser, useClerk } from "@clerk/clerk-react";
 import {
@@ -22,19 +22,38 @@ const navItems = [
   { path: "/transaction", label: "Transactions", icon: Receipt },
 ];
 
+
 const AppLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('theme') === 'dark';
+  });
   const { user } = useUser();
   const { signOut } = useClerk();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
 
   const handleLogout = async () => {
     await signOut();
     navigate("/");
   };
 
+  const handleToggleTheme = () => {
+    setDarkMode((prev) => !prev);
+  };
+
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30">
+    <div className="flex h-screen bg-linear-to-br from-gray-50 via-white to-purple-50/30">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -45,17 +64,17 @@ const AppLayout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-[270px] bg-white/80 backdrop-blur-xl border-r border-gray-200/60 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 shadow-xl lg:shadow-none ${
+        className={`fixed inset-y-0 left-0 z-40 w-67.5 bg-white/80 backdrop-blur-xl border-r border-gray-200/60 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 shadow-xl lg:shadow-none ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-100">
           <NavLink to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-200 group-hover:shadow-purple-300 transition-shadow">
+            <div className="w-8 h-8 rounded-xl bg-linear-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-200 group-hover:shadow-purple-300 transition-shadow">
               <Cloud className="w-4.5 h-4.5 text-white" />
             </div>
-            <span className="text-lg font-bold bg-gradient-to-r from-purple-700 to-indigo-600 bg-clip-text text-transparent">
+            <span className="text-lg font-bold bg-linear-to-r from-purple-700 to-indigo-600 bg-clip-text text-transparent">
               CloudShare
             </span>
           </NavLink>
@@ -80,7 +99,7 @@ const AppLayout = () => {
               className={({ isActive }) =>
                 `group flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 ${
                   isActive
-                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
+                    ? "bg-linear-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
                     : "text-gray-500 hover:bg-gray-100/80 hover:text-gray-900"
                 }`
               }
@@ -103,14 +122,20 @@ const AppLayout = () => {
           <div className="flex items-center gap-3 px-2">
             <UserButton afterSignOutUrl="/" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-800 truncate">
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">
                 {user?.firstName || "User"}
               </p>
-              <p className="text-[11px] text-gray-400 truncate">
+              <p className="text-[11px] text-gray-400 dark:text-gray-300 truncate">
                 {user?.primaryEmailAddress?.emailAddress || ""}
               </p>
             </div>
           </div>
+          <button
+            onClick={handleToggleTheme}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-all duration-200"
+          >
+            {darkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}
+          </button>
           <button
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 transition-all duration-200"
@@ -134,7 +159,7 @@ const AppLayout = () => {
           <div className="flex-1" />
           <div className="flex items-center gap-4">
             <span className="hidden sm:flex items-center gap-2 text-sm text-gray-500">
-              Welcome back,{" "}
+              Welcome,{" "}
               <span className="font-semibold text-gray-800">
                 {user?.firstName || "User"}
               </span>
