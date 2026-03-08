@@ -88,7 +88,7 @@ public class ClerkAuthFilter extends OncePerRequestFilter {
     String authHeader = request.getHeader("Authorization");
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
       log.warn("Missing Authorization header for {} {}", method, path);
-      sendError(request, response, HttpServletResponse.SC_UNAUTHORIZED,
+      sendError(response, HttpServletResponse.SC_UNAUTHORIZED,
           "Missing or invalid Authorization header");
       return;
     }
@@ -96,7 +96,7 @@ public class ClerkAuthFilter extends OncePerRequestFilter {
     String token = authHeader.substring(7).trim();
     if (token.isEmpty()) {
       log.warn("Empty token for {} {}", method, path);
-      sendError(request, response, HttpServletResponse.SC_UNAUTHORIZED, "Empty token");
+      sendError(response, HttpServletResponse.SC_UNAUTHORIZED, "Empty token");
       return;
     }
 
@@ -130,19 +130,13 @@ public class ClerkAuthFilter extends OncePerRequestFilter {
     } catch (Exception e) {
       log.error("Auth FAILED for {} {}: [{}] {}", method, path,
           e.getClass().getSimpleName(), e.getMessage());
-      sendError(request, response, HttpServletResponse.SC_UNAUTHORIZED,
+      sendError(response, HttpServletResponse.SC_UNAUTHORIZED,
           "Invalid or expired token");
     }
   }
 
-  private void sendError(HttpServletRequest request, HttpServletResponse response, int status, String message)
+  private void sendError(HttpServletResponse response, int status, String message)
       throws IOException {
-    // Ensure CORS headers are present on error responses
-    String origin = request.getHeader("Origin");
-    if (origin != null && !response.containsHeader("Access-Control-Allow-Origin")) {
-      response.setHeader("Access-Control-Allow-Origin", origin);
-      response.setHeader("Access-Control-Allow-Credentials", "true");
-    }
     response.setStatus(status);
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
