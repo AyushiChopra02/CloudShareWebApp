@@ -1,0 +1,5 @@
+FROM phpmyadmin/phpmyadmin
+
+ENV PMA_HOST=mysql-container
+ENV PMA_PORT=3306
+ENV MYSQL_ROOT_PASSWORD=020705

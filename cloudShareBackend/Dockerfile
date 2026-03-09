@@ -12,6 +12,11 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
+# Copy the wait script
+COPY wait-for-mysql.sh /app/wait-for-mysql.sh
+RUN chmod +x /app/wait-for-mysql.sh
+
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","app.jar"]
+# Run the wait script instead of directly running the jar
+ENTRYPOINT ["/app/wait-for-mysql.sh"]
