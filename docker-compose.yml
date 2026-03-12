@@ -1,0 +1,62 @@
+services:
+
+  mysql-container:
+    build: ./mysql
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 020705
+      MYSQL_DATABASE: cloudshare_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - cloudshare-network
+
+  backend:
+    build: ./cloudShareBackend
+    container_name: cloudshare-backend
+    restart: always
+    depends_on:
+      - mysql-container
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/cloudshare_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 020705
+    networks:
+      - cloudshare-network
+
+  frontend:
+    build: ./cloudShareWebapp
+    container_name: cloudshare-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - cloudshare-network
+
+  phpmyadmin:
+    build: ./phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    depends_on:
+      - mysql-container
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql-container
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: 020705
+    networks:
+      - cloudshare-network
+
+volumes:
+  mysql-data:
+
+networks:
+  cloudshare-network:
