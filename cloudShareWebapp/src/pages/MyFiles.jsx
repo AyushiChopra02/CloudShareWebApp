@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../context/useAppContext";
+import { useAuth } from "@clerk/clerk-react";
 import {
   Grid3X3,
   List,
@@ -19,9 +20,13 @@ import {
   Search,
   Loader2,
   Upload,
+  Eye,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
+const API = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
 
 const getFileIcon = (type) => {
   if (!type) return File;
@@ -58,19 +63,44 @@ const formatSize = (bytes) => {
 
 const formatDate = (date) => {
   if (!date) return "—";
-  return new Date(date).toLocaleDateString("en-US", {
+  const d = new Date(date);
+  return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
+  }) + " " + d.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
 const MyFiles = () => {
   const { files, fetchFiles, removeFile, toggleVisibility, downloadFileById, loading } =
     useAppContext();
+  const { getToken } = useAuth();
   const [viewMode, setViewMode] = useState("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState(null);
+  const [previewImg, setPreviewImg] = useState(null);
+
+  const handlePreview = async (file) => {
+    try {
+      const token = await getToken();
+      const res = await fetch(`${API}/files/${file.id}/download`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      setPreviewImg(url);
+    } catch {
+      toast.error("Failed to preview image");
+    }
+  };
+
+  const closePreview = () => {
+    if (previewImg) URL.revokeObjectURL(previewImg);
+    setPreviewImg(null);
+  };
 
   useEffect(() => {
     fetchFiles();
@@ -124,6 +154,15 @@ const MyFiles = () => {
 
         {/* Actions */}
         <div className="mt-4 pt-3.5 border-t border-gray-50 flex items-center gap-1.5">
+          {file.fileType?.startsWith("image/") && (
+            <button
+              onClick={() => handlePreview(file)}
+              className="p-2 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+              title="View image"
+            >
+              <Eye size={14} />
+            </button>
+          )}
           <button
             onClick={() => toggleVisibility(file.id)}
             className="p-2 rounded-lg text-gray-400 hover:bg-purple-50 hover:text-purple-600 transition-all"
@@ -208,10 +247,22 @@ const MyFiles = () => {
 
   return (
     <div>
+      {/* Image Preview Modal */}
+      {previewImg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={closePreview}>
+          <div className="relative bg-white dark:bg-gray-900 rounded-2xl p-3 shadow-2xl max-w-[90vw] max-h-[90vh]" onClick={e => e.stopPropagation()}>
+            <button onClick={closePreview} className="absolute -top-3 -right-3 w-8 h-8 bg-white dark:bg-gray-800 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-red-500 transition-colors">
+              <X size={16} />
+            </button>
+            <img src={previewImg} alt="Preview" className="max-w-[80vw] max-h-[80vh] rounded-lg object-contain" />
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900">My Files</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">My Files</h1>
           <p className="text-sm text-gray-400 mt-1">
             {files.length} file{files.length !== 1 ? "s" : ""} uploaded
           </p>
@@ -225,7 +276,7 @@ const MyFiles = () => {
               placeholder="Search files..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-400 w-52 transition-all placeholder:text-gray-300"
+              className="pl-9 pr-4 py-2.5 text-sm bg-white dark:bg-[#232336] border border-gray-200 dark:border-[#35354a] rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-400 w-52 transition-all placeholder:text-gray-300 dark:text-white dark:placeholder:text-gray-500"
             />
           </div>
           {/* View Toggle */}

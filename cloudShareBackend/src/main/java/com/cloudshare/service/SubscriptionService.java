@@ -65,6 +65,8 @@ public class SubscriptionService {
         .uploadsLimit(sub.getUploadsLimit())
         .storageUsed(formatBytes(sub.getStorageUsedBytes()))
         .storageLimit(formatBytes(sub.getStorageLimitBytes()))
+        .storageUsedBytes(sub.getStorageUsedBytes())
+        .storageLimitBytes(sub.getStorageLimitBytes())
         .expiresAt(sub.getExpiresAt() != null ? sub.getExpiresAt().toString() : null)
         .build();
   }

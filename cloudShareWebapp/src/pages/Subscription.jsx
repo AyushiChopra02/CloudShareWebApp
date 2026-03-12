@@ -175,7 +175,7 @@ const Subscription = () => {
         {plans.map((plan) => (
           <div
             key={plan.id}
-            className="bg-white rounded-2xl border p-6"
+            className={`bg-white rounded-2xl border p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${plan.highlighted ? 'border-purple-300 hover:shadow-purple-100' : 'border-gray-200 hover:shadow-gray-100'}`}
           >
             <h3 className="text-lg font-bold">{plan.name}</h3>
 
@@ -196,9 +196,21 @@ const Subscription = () => {
             <button
               onClick={() => handlePayment(plan)}
               disabled={currentPlan.toLowerCase() === plan.id || processing}
-              className="w-full py-3 bg-purple-600 text-white rounded-lg"
+              className={`w-full py-3 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
+                currentPlan.toLowerCase() === plan.id
+                  ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                  : plan.highlighted
+                    ? 'bg-purple-600 text-white hover:bg-purple-700 hover:shadow-lg'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
             >
-              {processing ? "Processing..." : plan.buttonText}
+              {processing && currentPlan.toLowerCase() !== plan.id ? (
+                <><Loader2 size={16} className="animate-spin" /> Processing...</>
+              ) : currentPlan.toLowerCase() === plan.id ? (
+                <><Check size={16} /> Current Plan</>
+              ) : (
+                plan.buttonText
+              )}
             </button>
           </div>
         ))}

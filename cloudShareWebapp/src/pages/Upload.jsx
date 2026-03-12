@@ -93,8 +93,8 @@ const Upload = () => {
     <div className="max-w-3xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900">Upload Files</h1>
-        <p className="mt-1.5 text-sm text-gray-500">
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">Upload Files</h1>
+        <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">
           Drag & drop files or click to browse. Uploaded files can be shared publicly.
         </p>
       </div>

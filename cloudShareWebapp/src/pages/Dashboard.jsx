@@ -29,10 +29,14 @@ const formatSize = (bytes) => {
 
 const formatDate = (date) => {
   if (!date) return "—";
-  return new Date(date).toLocaleDateString("en-US", {
+  const d = new Date(date);
+  return d.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
+  }) + " " + d.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -102,11 +106,11 @@ const Dashboard = () => {
     <div className="max-w-7xl mx-auto">
       {/* Welcome */}
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900">
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">
           Welcome, {user?.firstName || "User"}{" "}
           <span className="inline-block animate-float">👋</span>
         </h1>
-        <p className="text-sm text-gray-500 mt-1.5">
+        <p className="text-sm text-gray-700 dark:text-gray-300 mt-1.5">
           Here&apos;s an overview of your cloud storage activity.
         </p>
       </div>
@@ -116,7 +120,7 @@ const Dashboard = () => {
         {statCards.map((card, i) => (
           <div
             key={card.label}
-            className={`animate-fade-in-up stagger-${i + 1} group relative bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-gray-100/50 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden`}
+            className={`animate-fade-in-up stagger-${i + 1} group relative bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-5 hover:shadow-xl hover:shadow-gray-100/50 dark:hover:shadow-black/30 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden`}
           >
             {/* Subtle gradient accent top */}
             <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient}`} />
@@ -126,8 +130,8 @@ const Dashboard = () => {
               </div>
               <TrendingUp size={14} className="text-green-400" />
             </div>
-            <p className="text-3xl font-extrabold text-gray-900">{card.value}</p>
-            <p className="text-xs font-medium text-gray-400 mt-1 tracking-wide">{card.label}</p>
+            <p className="text-3xl font-extrabold text-gray-900 dark:text-white">{card.value}</p>
+            <p className="text-xs font-medium text-gray-400 dark:text-gray-400 mt-1 tracking-wide">{card.label}</p>
           </div>
         ))}
       </div>
@@ -135,8 +139,8 @@ const Dashboard = () => {
       {/* Quick Actions + Recent Files */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Quick Actions */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
-          <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <div className="bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
+          <h2 className="text-base font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <Sparkles size={16} className="text-purple-500" />
             Quick Actions
           </h2>
@@ -163,9 +167,9 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Files */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
+        <div className="lg:col-span-2 bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-gray-900">Recent Files</h2>
+            <h2 className="text-base font-bold text-gray-900 dark:text-white">Recent Files</h2>
             <Link to="/myfiles" className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
               View all <ArrowRight size={12} />
             </Link>
@@ -192,8 +196,8 @@ const Dashboard = () => {
                     <FileText size={16} className="text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 truncate">{file.fileName}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">{file.fileName}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
                       {formatSize(file.fileSize)} • {formatDate(file.uploadedAt)}
                     </p>
                   </div>
@@ -215,9 +219,9 @@ const Dashboard = () => {
       {/* Subscription + Recent Transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Subscription Card */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
+        <div className="bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-gray-900">Subscription</h2>
+            <h2 className="text-base font-bold text-gray-900 dark:text-white">Subscription</h2>
             <Link to="/subscription" className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
               Manage <ArrowRight size={12} />
             </Link>
@@ -230,7 +234,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-gray-900">{subscription.plan} Plan</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-white">{subscription.plan} Plan</p>
                     {subscription.plan === "Premium" && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-600">PRO</span>
                     )}
@@ -244,7 +248,7 @@ const Dashboard = () => {
                 <div>
                   <div className="flex justify-between text-xs mb-1.5">
                     <span className="text-gray-400 font-medium">Uploads</span>
-                    <span className="font-bold text-gray-600">{subscription.uploadsUsed} / {subscription.uploadsLimit}</span>
+                    <span className="font-bold text-gray-600 dark:text-gray-300">{subscription.uploadsUsed} / {subscription.uploadsLimit}</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                     <div className="bg-gradient-to-r from-purple-500 to-indigo-500 h-2.5 rounded-full transition-all duration-500" style={{ width: `${Math.min((subscription.uploadsUsed / subscription.uploadsLimit) * 100, 100)}%` }} />
@@ -253,10 +257,10 @@ const Dashboard = () => {
                 <div>
                   <div className="flex justify-between text-xs mb-1.5">
                     <span className="text-gray-400 font-medium">Storage</span>
-                    <span className="font-bold text-gray-600">{subscription.storageUsed} / {subscription.storageLimit}</span>
+                    <span className="font-bold text-gray-600 dark:text-gray-300">{subscription.storageUsed} / {subscription.storageLimit}</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2.5 rounded-full w-1/6 transition-all duration-500" />
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2.5 rounded-full transition-all duration-500" style={{ width: `${subscription.storageLimitBytes ? Math.min((subscription.storageUsedBytes / subscription.storageLimitBytes) * 100, 100) : 0}%` }} />
                   </div>
                 </div>
               </div>
@@ -267,9 +271,9 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Transactions */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-300">
+        <div className="bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-gray-900">Recent Transactions</h2>
+            <h2 className="text-base font-bold text-gray-900 dark:text-white">Recent Transactions</h2>
             <Link to="/transaction" className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
               View all <ArrowRight size={12} />
             </Link>
@@ -289,11 +293,11 @@ const Dashboard = () => {
                     <CreditCard size={16} className="text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-800">{txn.type}</p>
-                    <p className="text-xs text-gray-400">{formatDate(txn.date)}</p>
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{txn.type}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">{formatDate(txn.date)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-extrabold text-gray-900">₹{txn.amount}</p>
+                    <p className="text-sm font-extrabold text-gray-900 dark:text-white">₹{txn.amount}</p>
                     <span className={`text-[11px] font-semibold ${txn.status === "completed" ? "text-green-600" : "text-amber-600"}`}>
                       {txn.status?.charAt(0).toUpperCase() + txn.status?.slice(1)}
                     </span>

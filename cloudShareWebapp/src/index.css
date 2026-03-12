@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ─── Tell Tailwind v4 to use class-based dark mode ───── */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ─── Dark mode overrides ─────────────────────────────── */
 html.dark {
   background-color: #18181b;
@@ -15,16 +21,51 @@ body.dark {
 .dark .bg-gray-100 {
   background-color: #232336 !important;
 }
+.dark .text-gray-950,
 .dark .text-gray-900,
 .dark .text-gray-800 {
   color: #e5e7eb !important;
+}
+.dark .text-gray-700,
+.dark .text-gray-600 {
+  color: #c4c4cc !important;
 }
 .dark .text-gray-500,
 .dark .text-gray-400 {
   color: #a1a1aa !important;
 }
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@import "tailwindcss";
+/* Dark mode borders for section lines */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-200\/60 {
+  border-color: #35354a !important;
+}
+/* Dark mode colored backgrounds */
+.dark .bg-purple-50,
+.dark .bg-blue-50,
+.dark .bg-emerald-50,
+.dark .bg-amber-50,
+.dark .bg-red-50,
+.dark .bg-green-50 {
+  background-color: #2a2a3d !important;
+}
+.dark .hover\:bg-gray-50:hover {
+  background-color: #2a2a3d !important;
+}
+/* Dark mode hover colored backgrounds */
+.dark .hover\:bg-purple-100:hover,
+.dark .hover\:bg-blue-100:hover,
+.dark .hover\:bg-emerald-100:hover,
+.dark .hover\:bg-amber-100:hover {
+  background-color: #35355a !important;
+}
+/* Dark mode shadow fix */
+.dark .hover\:shadow-xl:hover {
+  --tw-shadow-color: rgba(0, 0, 0, 0.3);
+}
+.dark .shadow-lg {
+  --tw-shadow-color: rgba(0, 0, 0, 0.2);
+}
 
 * {
   font-family: 'Inter', sans-serif;

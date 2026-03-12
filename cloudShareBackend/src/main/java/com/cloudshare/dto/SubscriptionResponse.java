@@ -12,5 +12,7 @@ public class SubscriptionResponse {
   private int uploadsLimit;
   private String storageUsed;
   private String storageLimit;
+  private Long storageUsedBytes;
+  private Long storageLimitBytes;
   private String expiresAt;
 }
