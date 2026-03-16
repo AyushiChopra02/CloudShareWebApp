@@ -14,7 +14,10 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+<<<<<<< Updated upstream
   Timer,
+=======
+>>>>>>> Stashed changes
 } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -32,10 +35,16 @@ const WARNING_BEFORE = 2 * 60 * 1000;   // warn 2 min before
 
 const AppLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+<<<<<<< Updated upstream
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   // const [darkMode, setDarkMode] = useState(() => {
   //   return localStorage.getItem('theme') === 'dark';
   // });
+=======
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('sidebarCollapsed') === 'true';
+  });
+>>>>>>> Stashed changes
   const [darkMode, setDarkMode] = useState(() => {
   const savedTheme = localStorage.getItem("theme");
   return savedTheme ? savedTheme === "dark" : false;
@@ -113,6 +122,13 @@ const AppLayout = () => {
     setDarkMode((prev) => !prev);
   };
 
+  const handleToggleSidebar = () => {
+    setSidebarCollapsed((prev) => {
+      localStorage.setItem('sidebarCollapsed', String(!prev));
+      return !prev;
+    });
+  };
+
   return (
     // <div className="flex h-screen bg-linear-to-br from-gray-50 via-white to-purple-50/30 dark:from-[#18181b] dark:via-[#1e1e2e] dark:to-[#1e1e2e]">
     <div className="flex h-screen bg-gray-50 dark:bg-[#18181b] transition-colors duration-300">
@@ -126,12 +142,22 @@ const AppLayout = () => {
 
       {/* Sidebar */}
       <aside
+<<<<<<< Updated upstream
         className={`fixed inset-y-0 left-0 z-40 ${sidebarCollapsed ? 'w-16' : 'w-67.5'} bg-white/80 dark:bg-[#1e1e2e]/95 backdrop-blur-xl border-r border-gray-200/60 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 shadow-xl lg:shadow-none ${
+=======
+        className={`fixed inset-y-0 left-0 z-40 bg-white/80 backdrop-blur-xl border-r border-gray-300 transform transition-all duration-300 ease-in-out lg:relative lg:translate-x-0 shadow-xl lg:shadow-none ${
+>>>>>>> Stashed changes
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } ${
+          sidebarCollapsed ? "lg:w-20" : "w-67.5"
         }`}
       >
         {/* Logo */}
+<<<<<<< Updated upstream
         <div className={`flex items-center justify-between h-16 ${sidebarCollapsed ? 'px-3' : 'px-6'} border-b border-gray-100`}>
+=======
+        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-300">
+>>>>>>> Stashed changes
           <NavLink to="/" className="flex items-center gap-2.5 group">
             <div className="w-8 h-8 rounded-xl bg-linear-to-br from-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-200 group-hover:shadow-purple-300 transition-shadow shrink-0">
               <Cloud className="w-4.5 h-4.5 text-white" />
@@ -144,10 +170,18 @@ const AppLayout = () => {
           </NavLink>
           <div className="flex items-center gap-1">
             <button
+<<<<<<< Updated upstream
               className="hidden lg:block text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
               onClick={() => setSidebarCollapsed(prev => !prev)}
             >
               {sidebarCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+=======
+              className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all"
+              onClick={handleToggleSidebar}
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {sidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+>>>>>>> Stashed changes
             </button>
             <button
               className="lg:hidden text-gray-400 hover:text-gray-600 transition-colors"
@@ -172,16 +206,27 @@ const AppLayout = () => {
               onClick={() => setSidebarOpen(false)}
               title={sidebarCollapsed ? item.label : undefined}
               className={({ isActive }) =>
+<<<<<<< Updated upstream
                 `group flex items-center ${sidebarCollapsed ? 'justify-center' : ''} gap-3 ${sidebarCollapsed ? 'px-2' : 'px-4'} py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 ${
+=======
+                `group flex items-center ${
+                  sidebarCollapsed ? "justify-center" : "gap-3"
+                } px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-200 ${
+>>>>>>> Stashed changes
                   isActive
                     ? "bg-linear-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-200/50"
                     : "text-gray-500 hover:bg-gray-100/80 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100"
                 }`
               }
+              title={sidebarCollapsed ? item.label : undefined}
             >
               {({ isActive }) => (
                 <>
+<<<<<<< Updated upstream
                   <item.icon size={17} className={isActive ? "text-white" : "text-gray-400 group-hover:text-purple-500 transition-colors"} />
+=======
+                  <item.icon size={17} className={`shrink-0 ${isActive ? "text-white" : "text-gray-400 group-hover:text-purple-500 transition-colors"}`} />
+>>>>>>> Stashed changes
                   {!sidebarCollapsed && item.label}
                   {!sidebarCollapsed && isActive && (
                     <Sparkles size={12} className="ml-auto text-purple-200" />
@@ -193,6 +238,7 @@ const AppLayout = () => {
         </nav>
 
         {/* User section */}
+<<<<<<< Updated upstream
         <div className={`${sidebarCollapsed ? 'px-2' : 'px-4'} py-4 border-t border-gray-100 bg-gray-50/50 dark:bg-[#1a1a2e] space-y-3`}>
           {sidebarCollapsed ? (
             <div className="flex justify-center">
@@ -226,6 +272,63 @@ const AppLayout = () => {
                 Sign Out
               </button>
             </>
+=======
+        <div className={`border-t border-gray-300 bg-gray-50/50 ${
+          sidebarCollapsed ? "px-2 py-3 space-y-2" : "px-4 py-4 space-y-3"
+        }`}>
+          {/* User info */}
+          <div className={`flex items-center ${
+            sidebarCollapsed ? "justify-center" : "gap-3 px-2"
+          }`}>
+            <UserButton afterSignOutUrl="/" />
+            {!sidebarCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-bold text-purple-700 dark:text-purple-300 truncate">
+                  {user?.fullName || user?.firstName || "User"}
+                </p>
+                <p className="text-[11px] font-semibold text-indigo-600 dark:text-indigo-300 truncate">
+                  {user?.primaryEmailAddress?.emailAddress || ""}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Theme toggle */}
+          {sidebarCollapsed ? (
+            <button
+              onClick={handleToggleTheme}
+              className="w-full flex items-center justify-center p-2.5 rounded-xl text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-all duration-200"
+              title={darkMode ? 'Dark Mode' : 'Light Mode'}
+            >
+              {darkMode ? '🌙' : '☀️'}
+            </button>
+          ) : (
+            <button
+              onClick={handleToggleTheme}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 transition-all duration-200"
+            >
+              {darkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}
+            </button>
+          )}
+
+          {/* Sign out */}
+          {sidebarCollapsed ? (
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center p-2.5 rounded-xl text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 transition-all duration-200"
+              title="Sign Out"
+            >
+              <LogOut size={16} />
+            </button>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 transition-all duration-200"
+            >
+              <LogOut size={16} />
+              Sign Out
+            </button>
+>>>>>>> Stashed changes
           )}
         </div>
       </aside>
@@ -233,7 +336,11 @@ const AppLayout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
+<<<<<<< Updated upstream
         <header className="flex items-center h-16 px-4 sm:px-6 bg-white/70 dark:bg-[#1e1e2e]/70 backdrop-blur-xl border-b border-gray-200/60 sticky top-0 z-20">
+=======
+        <header className="flex items-center h-16 px-4 sm:px-6 bg-white/70 backdrop-blur-xl border-b border-gray-300 sticky top-0 z-20">
+>>>>>>> Stashed changes
           <button
             className="lg:hidden mr-4 text-gray-400 hover:text-gray-700 transition-colors"
             onClick={() => setSidebarOpen(true)}

@@ -31,7 +31,7 @@ const PriceSection = () => {
               className={`relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
                 plan.highlighted
                   ? "border-2 border-purple-500 ring-4 ring-purple-50 shadow-lg shadow-purple-100/30"
-                  : "border border-gray-200 hover:shadow-gray-200/50"
+                  : "border border-gray-300 hover:shadow-gray-200/50"
               }`}
             >
               {plan.highlighted && (

@@ -29,7 +29,7 @@ const TestimonialsSection = () => {
           {testimonials.map((t, index) => (
             <div
               key={index}
-              className="relative bg-white rounded-2xl p-8 border border-gray-100 hover:shadow-xl hover:shadow-purple-100/20 hover:-translate-y-1 transition-all duration-300"
+              className="relative bg-white rounded-2xl p-8 border border-gray-300 hover:shadow-xl hover:shadow-purple-100/20 hover:-translate-y-1 transition-all duration-300"
             >
               <Quote size={32} className="absolute top-6 right-6 text-purple-100" />
               <div className="flex items-center gap-1 mb-4">
@@ -44,7 +44,7 @@ const TestimonialsSection = () => {
               <p className="text-gray-600 leading-relaxed mb-6">
                 &ldquo;{t.quote}&rdquo;
               </p>
-              <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+              <div className="flex items-center gap-3 pt-4 border-t border-gray-300">
                 <img
                   src={t.image}
                   alt={t.name}

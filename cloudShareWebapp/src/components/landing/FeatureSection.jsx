@@ -88,7 +88,7 @@ const FeatureSection = () => {
             return (
               <div
                 key={index}
-                className={`animate-fade-in-up stagger-${index + 1} group relative p-8 rounded-2xl border border-gray-100 bg-white hover:shadow-xl hover:shadow-purple-100/30 hover:-translate-y-1 transition-all duration-300 cursor-default`}
+                className={`animate-fade-in-up stagger-${index + 1} group relative p-8 rounded-2xl border border-gray-300 bg-white hover:shadow-xl hover:shadow-purple-100/30 hover:-translate-y-1 transition-all duration-300 cursor-default`}
               >
                 {/* Icon */}
                 <div

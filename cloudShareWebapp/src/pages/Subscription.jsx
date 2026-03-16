@@ -10,6 +10,7 @@ import {
   HardDrive,
   Upload,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -73,7 +74,7 @@ const Subscription = () => {
   } = useAppContext();
 
   const { user } = useUser();
-  const [processing, setProcessing] = useState(false);
+  const [processingPlanId, setProcessingPlanId] = useState(null);
 
   useEffect(() => {
     fetchSubscription();
@@ -89,7 +90,7 @@ const Subscription = () => {
       return;
     }
 
-    setProcessing(true);
+    setProcessingPlanId(plan.id);
 
     const options = {
       key: RAZORPAY_KEY,
@@ -108,7 +109,7 @@ const Subscription = () => {
 
         addTransaction(txn);
         upgradeSubscription(plan);
-        setProcessing(false);
+        setProcessingPlanId(null);
         toast.success("Payment successful!");
       },
       prefill: {
@@ -120,7 +121,7 @@ const Subscription = () => {
       },
       modal: {
         ondismiss: function () {
-          setProcessing(false);
+          setProcessingPlanId(null);
         },
       },
     };
@@ -134,32 +135,32 @@ const Subscription = () => {
 
       {/* Current Usage */}
       {subscription && (
-        <div className="bg-white rounded-2xl border p-6 mb-8">
+        <div className="bg-white rounded-2xl border border-gray-300 p-6 mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
             {/* Uploads */}
-            <div className="p-4 rounded-xl bg-purple-50">
+            <div className="p-4 rounded-xl bg-purple-50 border border-gray-300">
               <div className="flex items-center gap-2 mb-2">
-                <Upload size={16} />
-                <span>Uploads</span>
+                <Upload size={16} className="text-purple-600" />
+                <span className="text-sm font-semibold text-gray-700">Uploads</span>
               </div>
 
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold text-gray-900">
                 {subscription.uploadsUsed} /
                 {subscription.uploadsLimit}
               </p>
             </div>
 
             {/* Storage */}
-            <div className="p-4 rounded-xl bg-blue-50">
+            <div className="p-4 rounded-xl bg-blue-50 border border-gray-300">
               <div className="flex items-center gap-2 mb-2">
-                <HardDrive size={16} />
-                <span>Storage</span>
+                <HardDrive size={16} className="text-blue-600" />
+                <span className="text-sm font-semibold text-gray-700">Storage</span>
               </div>
 
-              <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold text-gray-900">
                 {formatStorage(subscription.storageUsedBytes)}
-                <span className="text-sm ml-2">
+                <span className="text-sm ml-2 text-gray-500">
                   / {formatStorage(subscription.storageLimitBytes)}
                 </span>
               </p>
@@ -172,6 +173,7 @@ const Subscription = () => {
 
       {/* Plans */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+<<<<<<< Updated upstream
         {plans.map((plan) => (
           <div
             key={plan.id}
@@ -214,6 +216,89 @@ const Subscription = () => {
             </button>
           </div>
         ))}
+=======
+        {plans.map((plan) => {
+          const PlanIcon = plan.icon;
+          const isCurrentPlan = currentPlan.toLowerCase() === plan.id;
+          const isProcessing = processingPlanId === plan.id;
+
+          return (
+            <div
+              key={plan.id}
+              className={`relative bg-white rounded-2xl border-2 p-6 transition-all duration-300 cursor-default
+                hover:shadow-xl hover:-translate-y-1
+                ${
+                  plan.highlighted
+                    ? "border-purple-500 ring-2 ring-purple-100 hover:shadow-purple-200/40"
+                    : "border-gray-300 hover:border-purple-300 hover:shadow-gray-200/50"
+                }
+              `}
+            >
+              {plan.highlighted && (
+                <span className="absolute top-0 right-4 inline-flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold rounded-b-xl">
+                  <Sparkles size={12} />
+                  Popular
+                </span>
+              )}
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center shadow-lg ${
+                  plan.highlighted
+                    ? "bg-gradient-to-br from-purple-600 to-indigo-600"
+                    : "bg-gradient-to-br from-gray-500 to-gray-600"
+                }`}>
+                  <PlanIcon size={20} className="text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">{plan.name}</h3>
+                  {isCurrentPlan && (
+                    <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">Active</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-5">
+                <span className="text-4xl font-extrabold text-gray-900">₹{plan.displayPrice || plan.price}</span>
+                <span className="text-sm text-gray-500 ml-1">{plan.period}</span>
+              </div>
+
+              <ul className="mb-6 space-y-2.5">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-center gap-2.5 text-sm text-gray-600">
+                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                      <Check size={12} className="text-green-600" />
+                    </div>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                onClick={() => handlePayment(plan)}
+                disabled={isCurrentPlan || processingPlanId !== null}
+                className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                  isCurrentPlan
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : plan.highlighted
+                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:shadow-lg hover:shadow-purple-200/50 hover:-translate-y-0.5 disabled:opacity-60"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200 disabled:opacity-60"
+                }`}
+              >
+                {isProcessing ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 size={16} className="animate-spin" />
+                    Processing...
+                  </span>
+                ) : isCurrentPlan ? (
+                  "Current Plan"
+                ) : (
+                  plan.buttonText
+                )}
+              </button>
+            </div>
+          );
+        })}
+>>>>>>> Stashed changes
       </div>
 
     </div>

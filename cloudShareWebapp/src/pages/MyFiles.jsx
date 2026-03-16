@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../context/useAppContext";
 import { useAuth } from "@clerk/clerk-react";
 import {
@@ -20,13 +20,22 @@ import {
   Search,
   Loader2,
   Upload,
+<<<<<<< Updated upstream
   Eye,
   X,
+=======
+  X,
+  Eye,
+>>>>>>> Stashed changes
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
+<<<<<<< Updated upstream
 const API = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+=======
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+>>>>>>> Stashed changes
 
 const getFileIcon = (type) => {
   if (!type) return File;
@@ -81,6 +90,7 @@ const MyFiles = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState(null);
+<<<<<<< Updated upstream
   const [previewImg, setPreviewImg] = useState(null);
 
   const handlePreview = async (file) => {
@@ -101,6 +111,11 @@ const MyFiles = () => {
     if (previewImg) URL.revokeObjectURL(previewImg);
     setPreviewImg(null);
   };
+=======
+  const [previewFile, setPreviewFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+>>>>>>> Stashed changes
 
   useEffect(() => {
     fetchFiles();
@@ -118,12 +133,41 @@ const MyFiles = () => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const handlePreview = async (e, file) => {
+    e.stopPropagation();
+    setPreviewFile(file);
+    setPreviewLoading(true);
+    setPreviewUrl(null);
+    try {
+      const token = await getToken();
+      const res = await fetch(`${API_BASE}/files/${file.id}/download`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to load image");
+      const blob = await res.blob();
+      setPreviewUrl(URL.createObjectURL(blob));
+    } catch (err) {
+      console.error("Preview failed:", err);
+      toast.error("Failed to load image preview");
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  const closePreview = useCallback(() => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewFile(null);
+    setPreviewUrl(null);
+  }, [previewUrl]);
+
   // ─── Grid View Card ────────────────────────────────────
   const FileCard = ({ file }) => {
     const IconComponent = getFileIcon(file.fileType);
     const gradient = getIconGradient(file.fileType);
     return (
-      <div className="group bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-xl hover:shadow-gray-100/50 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden">
+      <div
+        className="group bg-white rounded-2xl border border-gray-300 p-5 hover:shadow-xl hover:shadow-gray-100/50 hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden"
+      >
         {/* Top accent bar */}
         <div className={`absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-100 transition-opacity`} />
 
@@ -153,12 +197,21 @@ const MyFiles = () => {
         </p>
 
         {/* Actions */}
+<<<<<<< Updated upstream
         <div className="mt-4 pt-3.5 border-t border-gray-50 flex items-center gap-1.5">
           {file.fileType?.startsWith("image/") && (
             <button
               onClick={() => handlePreview(file)}
               className="p-2 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
               title="View image"
+=======
+        <div className="mt-4 pt-3.5 border-t border-gray-300 flex items-center gap-1.5">
+          {file.fileType?.startsWith("image/") && (
+            <button
+              onClick={(e) => handlePreview(e, file)}
+              className="p-2 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all"
+              title="Preview image"
+>>>>>>> Stashed changes
             >
               <Eye size={14} />
             </button>
@@ -204,7 +257,9 @@ const MyFiles = () => {
     const IconComponent = getFileIcon(file.fileType);
     const gradient = getIconGradient(file.fileType);
     return (
-      <div className="flex items-center gap-4 px-5 py-4 bg-white border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50 transition-colors group">
+      <div
+        className="flex items-center gap-4 px-5 py-4 bg-white border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50 transition-colors group"
+      >
         <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0 shadow-sm`}>
           <IconComponent size={16} className="text-white" />
         </div>
@@ -226,6 +281,11 @@ const MyFiles = () => {
           {file.isPublic ? "Public" : "Private"}
         </span>
         <div className="flex items-center gap-0.5">
+          {file.fileType?.startsWith("image/") && (
+            <button onClick={(e) => handlePreview(e, file)} className="p-2 rounded-lg text-gray-400 hover:bg-indigo-50 hover:text-indigo-600 transition-all" title="Preview image">
+              <Eye size={14} />
+            </button>
+          )}
           <button onClick={() => toggleVisibility(file.id)} className="p-2 rounded-lg text-gray-400 hover:bg-purple-50 hover:text-purple-600 transition-all" title="Toggle visibility">
             {file.isPublic ? <Lock size={14} /> : <Globe size={14} />}
           </button>
@@ -341,9 +401,9 @@ const MyFiles = () => {
 
       {/* List View */}
       {!loading && viewMode === "list" && filteredFiles.length > 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-300 overflow-hidden shadow-sm">
           {/* List Header */}
-          <div className="flex items-center gap-4 px-5 py-3 bg-gray-50/80 border-b border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+          <div className="flex items-center gap-4 px-5 py-3 bg-gray-50/80 border-b border-gray-300 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
             <div className="w-10" />
             <div className="flex-1">Name</div>
             <div className="hidden sm:block w-24">Date</div>
@@ -353,6 +413,60 @@ const MyFiles = () => {
           {filteredFiles.map((file) => (
             <FileRow key={file.id} file={file} />
           ))}
+        </div>
+      )}
+
+      {/* Image Preview Modal */}
+      {previewFile && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={closePreview}
+        >
+          <div
+            className="relative bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[85vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200">
+              <h3 className="text-sm font-bold text-gray-900 truncate pr-4">{previewFile.fileName}</h3>
+              <button
+                onClick={closePreview}
+                className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all shrink-0"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            {/* Image */}
+            <div className="flex items-center justify-center p-4 bg-gray-50 min-h-[200px] max-h-[65vh] overflow-auto">
+              {previewLoading ? (
+                <Loader2 size={32} className="text-purple-500 animate-spin" />
+              ) : previewUrl ? (
+                <img
+                  src={previewUrl}
+                  alt={previewFile.fileName}
+                  className="max-w-full max-h-[60vh] object-contain rounded-lg"
+                />
+              ) : (
+                <p className="text-sm text-gray-400">Failed to load image</p>
+              )}
+            </div>
+            {/* Footer actions */}
+            <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-gray-200">
+              <button
+                onClick={() => downloadFileById(previewFile.id, previewFile.fileName)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:shadow-lg transition-all"
+              >
+                <Download size={14} />
+                Download
+              </button>
+              <button
+                onClick={closePreview}
+                className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

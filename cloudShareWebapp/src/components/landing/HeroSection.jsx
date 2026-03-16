@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
-import { Cloud, ArrowRight, Shield, Zap, Users } from "lucide-react";
+import { Cloud, ArrowRight, Shield, Zap, Users, Menu, X } from "lucide-react";
 import dashboardImg from "../../assets/dashboard.png";
 
 const HeroSection = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-white">
       {/* Animated gradient blobs */}
@@ -21,7 +24,17 @@ const HeroSection = () => {
             CloudShare
           </span>
         </div>
-        <div className="flex items-center gap-3">
+
+        {/* Hamburger button - visible on small screens */}
+        <button
+          className="md:hidden text-gray-600 hover:text-purple-600 transition-colors z-50"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Desktop nav links */}
+        <div className="hidden md:flex items-center gap-3">
           <SignedOut>
             <Link
               to="/sign-in"
@@ -44,6 +57,55 @@ const HeroSection = () => {
               Dashboard
             </Link>
           </SignedIn>
+        </div>
+
+        {/* Mobile menu overlay */}
+        {menuOpen && (
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 md:hidden"
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
+
+        {/* Mobile dropdown menu */}
+        <div
+          className={`md:hidden fixed top-0 right-0 z-40 h-full w-64 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out ${
+            menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+            <span className="text-lg font-bold text-gray-800">Menu</span>
+            <button onClick={() => setMenuOpen(false)} className="text-gray-500 hover:text-gray-800">
+              <X size={22} />
+            </button>
+          </div>
+          <div className="flex flex-col gap-2 px-6 py-6">
+            <SignedOut>
+              <Link
+                to="/sign-in"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-sm font-semibold text-gray-700 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/sign-up"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl text-center hover:shadow-lg transition-all"
+              >
+                Get Started
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <Link
+                to="/dashboard"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl text-center hover:shadow-lg transition-all"
+              >
+                Dashboard
+              </Link>
+            </SignedIn>
+          </div>
         </div>
       </nav>
 

@@ -120,7 +120,11 @@ const Dashboard = () => {
         {statCards.map((card, i) => (
           <div
             key={card.label}
+<<<<<<< Updated upstream
             className={`animate-fade-in-up stagger-${i + 1} group relative bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-5 hover:shadow-xl hover:shadow-gray-100/50 dark:hover:shadow-black/30 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden`}
+=======
+            className={`animate-fade-in-up stagger-${i + 1} group relative bg-white rounded-2xl border border-gray-300 p-5 hover:shadow-xl hover:shadow-gray-100/50 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden`}
+>>>>>>> Stashed changes
           >
             {/* Subtle gradient accent top */}
             <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient}`} />
@@ -139,8 +143,13 @@ const Dashboard = () => {
       {/* Quick Actions + Recent Files */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Quick Actions */}
+<<<<<<< Updated upstream
         <div className="bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
           <h2 className="text-base font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+=======
+        <div className="bg-white rounded-2xl border border-gray-300 p-6 hover:shadow-lg transition-shadow duration-300">
+          <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+>>>>>>> Stashed changes
             <Sparkles size={16} className="text-purple-500" />
             Quick Actions
           </h2>
@@ -167,7 +176,11 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Files */}
+<<<<<<< Updated upstream
         <div className="lg:col-span-2 bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
+=======
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-300 p-6 hover:shadow-lg transition-shadow duration-300">
+>>>>>>> Stashed changes
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-bold text-gray-900 dark:text-white">Recent Files</h2>
             <Link to="/myfiles" className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
@@ -219,7 +232,11 @@ const Dashboard = () => {
       {/* Subscription + Recent Transactions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Subscription Card */}
+<<<<<<< Updated upstream
         <div className="bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
+=======
+        <div className="bg-white rounded-2xl border border-gray-300 p-6 hover:shadow-lg transition-shadow duration-300">
+>>>>>>> Stashed changes
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-bold text-gray-900 dark:text-white">Subscription</h2>
             <Link to="/subscription" className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
@@ -271,7 +288,11 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Transactions */}
+<<<<<<< Updated upstream
         <div className="bg-white dark:bg-[#232336] rounded-2xl border border-gray-100 dark:border-[#35354a] p-6 hover:shadow-lg transition-shadow duration-300">
+=======
+        <div className="bg-white rounded-2xl border border-gray-300 p-6 hover:shadow-lg transition-shadow duration-300">
+>>>>>>> Stashed changes
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-bold text-gray-900 dark:text-white">Recent Transactions</h2>
             <Link to="/transaction" className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-1 transition-colors">
