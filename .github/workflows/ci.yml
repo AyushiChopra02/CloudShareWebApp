@@ -57,7 +57,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: cloudShareFrontend
+        working-directory: cloudShareWebapp
 
     steps:
       - name: Checkout code
