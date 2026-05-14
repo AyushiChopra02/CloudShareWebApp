@@ -31,3 +31,9 @@ target/
 
 # Uploads
 uploads/
+
+# Local env files
+.env
+
+# Spring local config
+cloudShareBackend/src/main/resources/application-local.properties
