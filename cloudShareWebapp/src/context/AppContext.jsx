@@ -36,10 +36,10 @@ const authFetch = async (getToken, url, options = {}) => {
     await new Promise((r) => setTimeout(r, 1500));
     try {
       token = await getToken();
-    } catch (e) {
+    } catch  {
       throw new Error("Authentication token not available yet");
     }
-  }
+  } 
 
   if (!token) {
     throw new Error("Authentication token not available yet");
