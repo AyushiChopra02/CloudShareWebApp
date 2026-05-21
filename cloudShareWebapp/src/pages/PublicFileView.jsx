@@ -9,6 +9,7 @@ import {
   Globe,
 } from "lucide-react";
 
+
 const API = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
 
 const formatSize = (bytes) => {
@@ -17,7 +18,7 @@ const formatSize = (bytes) => {
   if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
   return (bytes / 1048576).toFixed(1) + " MB";
 };
-
+// Public file view page
 const PublicFileView = () => {
   const { fileId } = useParams();
   const [file, setFile] = useState(null);
